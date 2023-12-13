@@ -28,6 +28,7 @@ public class User {
     private boolean verified;
     private double lat;
     private double lng;
+    private int score;
 
     public User(String username, String password) {
         this.username = username;
@@ -40,5 +41,4 @@ public class User {
         this.description = description;
         this.birthdate = birthdate;
     }
-
 }
