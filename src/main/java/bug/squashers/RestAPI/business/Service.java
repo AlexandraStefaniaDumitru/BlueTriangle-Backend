@@ -2,9 +2,11 @@ package bug.squashers.RestAPI.business;
 
 import bug.squashers.RestAPI.infrastructure.ActivityRepository;
 import bug.squashers.RestAPI.infrastructure.ChildRepository;
+import bug.squashers.RestAPI.infrastructure.CommunityActivityRepository;
 import bug.squashers.RestAPI.infrastructure.UserRepository;
 import bug.squashers.RestAPI.model.Activity;
 import bug.squashers.RestAPI.model.Child;
+import bug.squashers.RestAPI.model.CommunityActivity;
 import bug.squashers.RestAPI.model.User;
 import bug.squashers.RestAPI.utils.Utils;
 import org.bson.types.ObjectId;
@@ -24,9 +26,11 @@ public class Service {
     private UserRepository userRepository;
     @Autowired
     private ActivityRepository activityRepository;
-
     @Autowired
     private ChildRepository childRepository;
+    @Autowired
+    private CommunityActivityRepository communityActivityRepository;
+
     public List<User> findAllUsers() {
         System.out.println("findAllUsers");
         log.info("Service - findAllUsers");
@@ -53,11 +57,20 @@ public class Service {
         return activityRepository.findAll();
     }
 
+    public List<CommunityActivity> findAllCommunityActivities() {
+        log.info("Service - findAllCommunityActivities");
+        return communityActivityRepository.findAll();
+    }
+
     public Activity saveActivity(Activity activity){
         log.info("Service - saveActivity : {}",activity);
-        User adult = activity.getAdult();
-        adult.setScore(calculateUserScore(adult, 1));
-        return  activityRepository.save(activity);}
+        return  activityRepository.save(activity);
+    }
+
+    public CommunityActivity saveCommunityActivity(CommunityActivity communityActivity){
+        log.info("Service - saveCommunityActivity : {}", communityActivity);
+        return communityActivityRepository.save(communityActivity);
+    }
 
     private int calculateUserScore(User adult, int bonusScore) {
         return adult.getScore() + bonusScore;
@@ -99,6 +112,10 @@ public class Service {
     public Optional<Child> findChildByName(String name) {
         log.info("Service - findChildByName : {}",name);
         return childRepository.findByName(name);
+    }
+
+    public List<CommunityActivity> findCommunityActivityByOrganizer(User organizer){
+        return communityActivityRepository.findByOrganizer(organizer);
     }
 
     public Optional<User> login(String username, String password) {
