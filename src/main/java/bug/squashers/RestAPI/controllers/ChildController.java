@@ -28,6 +28,11 @@ public class ChildController {
         return new ResponseEntity<List<Child>>(service.findAllChildren(), HttpStatus.OK);
     }
 
+    @GetMapping("/known/{username}")
+    public ResponseEntity<List<Child>> getKnownChildren(@PathVariable String username) {
+        log.info("ChildController - getChildren");
+        return new ResponseEntity<List<Child>>(service.findAllKnownChildren(username), HttpStatus.OK);
+    }
     @GetMapping("/{name}")
     public ResponseEntity<Optional<Child>> getChildByUsername(@PathVariable String name){
         log.info("ChildController - getChildByUsername : {}",name);

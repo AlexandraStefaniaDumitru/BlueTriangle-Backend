@@ -72,6 +72,10 @@ public class Service {
         return communityActivityRepository.save(communityActivity);
     }
 
+    private int calculateUserScore(User adult, int bonusScore) {
+        return adult.getScore() + bonusScore;
+    }
+
     public User createUser(String username,String description, String password,String date) {
         log.info("Service - createUser : {},{},{},{}",username,description,password,date);
         String formattedDate = Utils.getFormattedDate(date);
@@ -81,6 +85,11 @@ public class Service {
     public List<Child> findAllChildren() {
         log.info("Service - findAllChildren");
         return childRepository.findAll();
+    }
+
+    public List<Child> findAllKnownChildren(String username) {
+        log.info("Service - findAllKnownChildren");
+        return userRepository.findByUsername(username).get().getKnownChildren();
     }
 
     public Optional<Child> findChild(ObjectId childID) { return childRepository.findById(childID);
