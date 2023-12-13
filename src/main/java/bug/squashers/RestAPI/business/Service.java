@@ -2,10 +2,9 @@ package bug.squashers.RestAPI.business;
 
 import bug.squashers.RestAPI.infrastructure.ActivityRepository;
 import bug.squashers.RestAPI.infrastructure.ChildRepository;
+import bug.squashers.RestAPI.infrastructure.MultipleChildActivityRepository;
 import bug.squashers.RestAPI.infrastructure.UserRepository;
-import bug.squashers.RestAPI.model.Activity;
-import bug.squashers.RestAPI.model.Child;
-import bug.squashers.RestAPI.model.User;
+import bug.squashers.RestAPI.model.*;
 import bug.squashers.RestAPI.utils.Utils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +22,15 @@ public class Service {
     private final static Logger log= LogManager.getLogger(Service.class);
     @Autowired
     private UserRepository userRepository;
+
+    /* ORIGINAL
     @Autowired
     private ActivityRepository activityRepository;
+     */
+
+    @Autowired
+    private MultipleChildActivityRepository multipleChildActivityRepository;
+
 
     @Autowired
     private ChildRepository childRepository;
@@ -37,25 +44,58 @@ public class Service {
         return userRepository.findByUsername(username).orElse(null);
     }
 
-    public List<Activity> getActivitiesForUserById(ObjectId userId) {
+    /*
+     ORIGINAL:
+     public List<Activity> getActivitiesForUserById(ObjectId userId)
+     */
+    public List<MultipleChildActivity> getActivitiesForUserById(ObjectId userId) {
         log.info("Service - getActivitiesForUserById : {}",userId);
+        /* ORIGINAL
         return activityRepository.findByChild_IdOrAdult_Id(userId, userId);
+         */
+        return multipleChildActivityRepository.findMultipleChildActivitiesByAdult_Id(userId);
     }
 
-    public List<Activity> getActivitiesForUserByUsername(String username) {
+    /*
+    ORIGINAL:
+    public List<Activity> getActivitiesForUserByUsername(String username)
+     */
+    public List<MultipleChildActivity> getActivitiesForUserByUsername(String username) {
         log.info("Service - getActivitiesForUserByUsername : {}",username);
         Optional<User> user = userRepository.findByUsername(username);
         ObjectId userId = user.get().getId();
+        /*
+        ORIGINAL:
         return activityRepository.findByChild_IdOrAdult_Id(userId, userId);
-    }
-    public List<Activity> findAll() {
-        log.info("Service - findAll");
-        return activityRepository.findAll();
+         */
+        return multipleChildActivityRepository.findMultipleChildActivitiesByAdult_Id(userId);
     }
 
-    public Activity saveActivity(Activity activity){
-        log.info("Service - saveActivity : {}",activity);
-        return  activityRepository.save(activity);}
+    /*
+    ORIGINAL:
+    public List<Activity> findAll()
+     */
+    public List<MultipleChildActivity> findAll() {
+        log.info("Service - findAll");
+        /*
+        ORIGINAL:
+        return activityRepository.findAll();
+         */
+        return multipleChildActivityRepository.findAll();
+    }
+
+    /*
+    ORIGINAL:
+    public Activity saveActivity(Activity activity)
+     */
+    public MultipleChildActivity saveActivity(MultipleChildActivity activity) {
+        log.info("Service - saveActivity : {}", activity);
+        /*
+        ORIGINAL:
+        return activityRepository.save(activity);
+         */
+        return multipleChildActivityRepository.save(activity);
+    }
 
     public User createUser(String username,String description, String password,String date) {
         log.info("Service - createUser : {},{},{},{}",username,description,password,date);
@@ -94,5 +134,14 @@ public class Service {
         log.info("Service - login : {}, {}",username,password);
         Optional<User> user = userRepository.findUserByUsernameAndPassword(username,password);
         return user;
+    }
+
+    public List<Child> findChilrenByNames(List<String> childrenNames) {
+        List<Child> children = new ArrayList<>();
+        for (String name :
+                childrenNames) {
+            children.add(childRepository.findByName(name).get());
+        }
+        return children;
     }
 }
