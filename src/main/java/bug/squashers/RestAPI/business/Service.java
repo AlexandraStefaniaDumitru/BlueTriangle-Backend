@@ -55,7 +55,13 @@ public class Service {
 
     public Activity saveActivity(Activity activity){
         log.info("Service - saveActivity : {}",activity);
+        User adult = activity.getAdult();
+        adult.setScore(calculateUserScore(adult, 1));
         return  activityRepository.save(activity);}
+
+    private int calculateUserScore(User adult, int bonusScore) {
+        return adult.getScore() + bonusScore;
+    }
 
     public User createUser(String username,String description, String password,String date) {
         log.info("Service - createUser : {},{},{},{}",username,description,password,date);
