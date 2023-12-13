@@ -68,6 +68,11 @@ public class Service {
         return childRepository.findAll();
     }
 
+    public List<Child> findAllKnownChildren(String username) {
+        log.info("Service - findAllKnownChildren");
+        return userRepository.findByUsername(username).get().getKnownChildren();
+    }
+
     public Optional<Child> findChild(ObjectId childID) { return childRepository.findById(childID);
     }
 
