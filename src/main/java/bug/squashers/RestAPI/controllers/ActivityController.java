@@ -59,6 +59,7 @@ public class ActivityController {
 
     @PostMapping("/multiple-dates")
     public ResponseEntity<?> addMultipleDateForAppointment(@RequestBody ActivityWithoutDateDTO activityWithoutDateDTO) {
+        log.info("ActivityController - bookAppointment : {}", activityWithoutDateDTO);
         Child child = service.findChild(activityWithoutDateDTO.getChildName()).orElse(null);
         User user = service.findUser(activityWithoutDateDTO.getAdultName()).orElse(null);
         for (int i = 0; i < activityWithoutDateDTO.getActivityDates().size(); i++) {

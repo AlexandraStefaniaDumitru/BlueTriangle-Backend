@@ -69,16 +69,19 @@ public class CommunityActivityController {
             User adult = service.findUser(adultName).orElse(null);
             adults.add(adult);
         }
-        CommunityActivity communityActivity = CommunityActivity.builder()
-                .children(childList)
-                .adults(adults)
-                .organizer(organizer)
-                .date(dto.getDate())
-                .description(dto.getDescription())
-                .duration(dto.getDuration())
-                .build();
-        CommunityActivity savedCommunityActivity = this.service.saveCommunityActivity(communityActivity);
-        this.service.saveCommunityActivity(savedCommunityActivity);
+        List<String> dates = List.of(dto.getDate().split(", "));
+        for (String date: dates) {
+            CommunityActivity communityActivity = CommunityActivity.builder()
+                    .children(childList)
+                    .adults(adults)
+                    .organizer(organizer)
+                    .date(date)
+                    .description(dto.getDescription())
+                    .duration(dto.getDuration())
+                    .build();
+            CommunityActivity savedCommunityActivity = this.service.saveCommunityActivity(communityActivity);
+            this.service.saveCommunityActivity(savedCommunityActivity);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
