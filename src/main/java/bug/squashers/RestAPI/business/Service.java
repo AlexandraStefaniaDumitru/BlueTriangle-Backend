@@ -59,7 +59,7 @@ public class Service {
         return activityRepository.findAll();
     }
 
-    @Cacheable("common-activities")
+    @Cacheable("community-activities")
     public List<CommunityActivity> findAllCommunityActivities() {
         log.info("Service - findAllCommunityActivities");
         return communityActivityRepository.findAll();

@@ -12,7 +12,7 @@ public class CacheConfig {
     @Bean
     @Primary
     public CacheManager cacheManagerActivities(){
-        return new ConcurrentMapCacheManager("common-activities");
+        return new ConcurrentMapCacheManager("community-activities");
     }
     @Bean
     public CacheManager cacheManagerChildren() {
