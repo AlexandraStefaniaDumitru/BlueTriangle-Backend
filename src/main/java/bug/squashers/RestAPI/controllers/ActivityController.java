@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,24 +23,28 @@ public class ActivityController {
     private Service service;
 
     @GetMapping
+    @Description("Retrieves all the activities from DB")
     public ResponseEntity<List<Activity>> getActivities() {
         log.info("ActivityController - getActivities");
         return new ResponseEntity<List<Activity>>(service.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/id/{userId}")
+    @Description("Retrieves all the activities for a particular user by his id")
     public List<Activity> getActivitiesForUserById(@PathVariable String userId) {
         log.info("ActivityController - getActivitiesForUserById : {}", userId);
         return service.getActivitiesForUserById(new ObjectId(userId));
     }
 
     @GetMapping("/{username}")
+    @Description("Retrieves all the activities for a particular user by his username")
     public List<Activity> getActivitiesForUserByUsernmae(@PathVariable String username) {
         log.info("ActivityController - getActivitiesForUserByUsernmae : {}", username);
         return service.getActivitiesForUserByUsername(username);
     }
 
     @PostMapping()
+    @Description("Creates an appointment for an activity with a child")
     public ResponseEntity<?> bookAppointment(@RequestBody DTO dto) {
         log.info("ActivityController - bookAppointment : {}", dto);
         System.out.println(dto.getChildName());
@@ -57,11 +62,8 @@ public class ActivityController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /**
-     * Adds multiple dates for an appointment made by a user
-     * @param activityWithoutDateDTO : the activity with all its occurrences
-     */
     @PostMapping("/multiple-dates")
+    @Description("Adds multiple dates for an appointment made by a user")
     public ResponseEntity<?> addMultipleDateForAppointment(@RequestBody ActivityWithoutDateDTO activityWithoutDateDTO) {
         log.info("ActivityController - bookAppointment : {}", activityWithoutDateDTO);
         Child child = service.findChild(activityWithoutDateDTO.getChildName()).orElse(null);

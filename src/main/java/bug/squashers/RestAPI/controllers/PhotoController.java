@@ -2,6 +2,7 @@ package bug.squashers.RestAPI.controllers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.annotation.Description;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class PhotoController {
     private final static Logger log= LogManager.getLogger(PhotoController.class);
 
     @GetMapping("/{filename}")
+    @Description("Retrieves the photo of a child or user")
     public ResponseEntity<Resource> getPhoto(@PathVariable String filename) {
         log.info("PhotoController - getPhoto : {}",filename);
         try {
