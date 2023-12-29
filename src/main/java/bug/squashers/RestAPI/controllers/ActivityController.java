@@ -57,6 +57,10 @@ public class ActivityController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Adds multiple dates for an appointment made by a user
+     * @param activityWithoutDateDTO : the activity with all its occurrences
+     */
     @PostMapping("/multiple-dates")
     public ResponseEntity<?> addMultipleDateForAppointment(@RequestBody ActivityWithoutDateDTO activityWithoutDateDTO) {
         log.info("ActivityController - bookAppointment : {}", activityWithoutDateDTO);
