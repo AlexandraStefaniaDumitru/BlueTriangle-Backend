@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.cache.annotation.Cacheable;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +59,7 @@ public class Service {
         return activityRepository.findAll();
     }
 
+    @Cacheable("community-activities")
     public List<CommunityActivity> findAllCommunityActivities() {
         log.info("Service - findAllCommunityActivities");
         return communityActivityRepository.findAll();
@@ -82,6 +85,7 @@ public class Service {
         return userRepository.insert(new User(username,password,description,formattedDate));
     }
 
+    @Cacheable("children")
     public List<Child> findAllChildren() {
         log.info("Service - findAllChildren");
         return childRepository.findAll();
