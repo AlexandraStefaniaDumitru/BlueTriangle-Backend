@@ -79,6 +79,8 @@ public class CommunityActivityController {
                     .date(date)
                     .description(dto.getDescription())
                     .duration(dto.getDuration())
+                    .isVerified(false)
+                    .hasFeedback(false)
                     .build();
             CommunityActivity savedCommunityActivity = this.service.saveCommunityActivity(communityActivity);
             this.service.saveCommunityActivity(savedCommunityActivity);

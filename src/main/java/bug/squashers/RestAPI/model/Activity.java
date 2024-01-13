@@ -29,4 +29,8 @@ public class Activity {
     private String duration;
 
     private String description;
+
+    private boolean isVerified;
+
+    private boolean hasFeedback;
 }
