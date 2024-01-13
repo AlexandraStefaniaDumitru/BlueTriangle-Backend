@@ -4,10 +4,7 @@ import bug.squashers.RestAPI.infrastructure.ActivityRepository;
 import bug.squashers.RestAPI.infrastructure.ChildRepository;
 import bug.squashers.RestAPI.infrastructure.CommunityActivityRepository;
 import bug.squashers.RestAPI.infrastructure.UserRepository;
-import bug.squashers.RestAPI.model.Activity;
-import bug.squashers.RestAPI.model.Child;
-import bug.squashers.RestAPI.model.CommunityActivity;
-import bug.squashers.RestAPI.model.User;
+import bug.squashers.RestAPI.model.*;
 import bug.squashers.RestAPI.utils.Utils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,10 +76,10 @@ public class Service {
         return adult.getScore() + bonusScore;
     }
 
-    public User createUser(String username,String description, String password,String date) {
-        log.info("Service - createUser : {},{},{},{}",username,description,password,date);
+    public User createUser(String email, String username, String description, String password, String date, Role role) {
+        log.info("Service - createUser : {},{},{},{},{},{}",email,username,description,password,date, role);
         String formattedDate = Utils.getFormattedDate(date);
-        return userRepository.insert(new User(username,password,description,formattedDate));
+        return userRepository.insert(new User(email, username,password,description,formattedDate, role));
     }
 
     @Cacheable("children")

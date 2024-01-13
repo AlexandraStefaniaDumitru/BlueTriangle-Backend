@@ -21,9 +21,13 @@ public class User {
     private String password;
     private String description;
     private String birthdate;
+    private String email;
 
     @DocumentReference
     private List<Child> knownChildren;
+
+    @DocumentReference
+    private Role role;
 
     private boolean verified;
     private double lat;
@@ -35,10 +39,12 @@ public class User {
         this.password = password;
     }
 
-    public User(String username, String password, String description, String birthdate) {
+    public User(String email, String username, String password, String description, String birthdate, Role role) {
+        this.email = email;
         this.username = username;
         this.password = password;
         this.description = description;
         this.birthdate = birthdate;
+        this.role = role;
     }
 }

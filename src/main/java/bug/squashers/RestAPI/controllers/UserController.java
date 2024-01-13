@@ -1,6 +1,7 @@
 package bug.squashers.RestAPI.controllers;
 
 import bug.squashers.RestAPI.business.Service;
+import bug.squashers.RestAPI.model.Role;
 import bug.squashers.RestAPI.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +43,7 @@ public class UserController {
     @Description("Creates a user profile")
     public ResponseEntity<User> createUser(@RequestBody Map<String, String> payload) {
         log.info("UserController - createUser : {}",payload);
-        return new ResponseEntity<User>(service.createUser(payload.get("username"),payload.get("description"), payload.get("password"),payload.get("date")), HttpStatus.OK);
+        return new ResponseEntity<User>(service.createUser(payload.get("email"),payload.get("username"),payload.get("description"), payload.get("password"),payload.get("date"), new Role("user")), HttpStatus.OK);
     }
 
     @PostMapping("/login")
