@@ -4,6 +4,7 @@ import bug.squashers.RestAPI.business.Service;
 import bug.squashers.RestAPI.model.Child;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,17 +24,20 @@ public class ChildController {
     }
 
     @GetMapping
+    @Description("Retrieves all the children")
     public ResponseEntity<List<Child>> getChildren() {
         log.info("ChildController - getChildren");
         return new ResponseEntity<List<Child>>(service.findAllChildren(), HttpStatus.OK);
     }
 
     @GetMapping("/known/{username}")
+    @Description("Retrieves all the children that interacted with a specific user")
     public ResponseEntity<List<Child>> getKnownChildren(@PathVariable String username) {
         log.info("ChildController - getChildren");
         return new ResponseEntity<List<Child>>(service.findAllKnownChildren(username), HttpStatus.OK);
     }
     @GetMapping("/{name}")
+    @Description("Retrieves a child based on his username")
     public ResponseEntity<Optional<Child>> getChildByUsername(@PathVariable String name){
         log.info("ChildController - getChildByUsername : {}",name);
         return new ResponseEntity<Optional<Child>>(service.findChildByName(name), HttpStatus.OK);
