@@ -72,6 +72,11 @@ public class Service {
         return communityActivityRepository.save(communityActivity);
     }
 
+    public void saveUser(User user) {
+        log.info("Service - saveUser : {}", user);
+        userRepository.save(user);
+    }
+
     private int calculateUserScore(User adult, int bonusScore) {
         return adult.getScore() + bonusScore;
     }

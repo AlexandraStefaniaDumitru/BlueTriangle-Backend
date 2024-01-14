@@ -5,6 +5,7 @@ import bug.squashers.RestAPI.model.Role;
 import bug.squashers.RestAPI.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bson.types.ObjectId;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,5 +60,17 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    @PostMapping("/verify")
+    @Description("Verifies an user")
+    public ResponseEntity<User> verifyUser(@RequestBody Map<String, String> payload) {
+        log.info("UserController - verifyUser : {}", payload);
+        User userOptional = service.findUserByUsername(payload.get("username"));
+        if (userOptional != null) {
+            userOptional.setVerified(true);
+            service.saveUser(userOptional);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
