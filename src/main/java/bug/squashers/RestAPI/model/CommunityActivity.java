@@ -28,4 +28,6 @@ public class CommunityActivity {
     private String date;
     private String duration;
     private String description;
+    private boolean isVerified;
+    private boolean hasFeedback;
 }

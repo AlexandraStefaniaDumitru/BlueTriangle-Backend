@@ -56,6 +56,8 @@ public class ActivityController {
                 .date(dto.getActivityDate())
                 .description(dto.getDescription())
                 .duration(dto.getDuration())
+                .isVerified(false)
+                .hasFeedback(false)
                 .build();
         Activity savedActivity = this.service.saveActivity(activity);
         this.service.saveActivity(savedActivity);
@@ -75,6 +77,8 @@ public class ActivityController {
                     .date(activityWithoutDateDTO.getActivityDates().get(i))
                     .description(activityWithoutDateDTO.getDescription())
                     .duration(activityWithoutDateDTO.getDuration())
+                    .isVerified(false)
+                    .hasFeedback(false)
                     .build();
             this.service.saveActivity(activity);
         }
