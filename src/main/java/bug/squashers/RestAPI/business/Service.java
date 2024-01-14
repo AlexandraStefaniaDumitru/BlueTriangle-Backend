@@ -129,4 +129,14 @@ public class Service {
         Optional<User> user = userRepository.findUserByUsernameAndPassword(username,password);
         return user;
     }
+
+    public Activity findActivityByDescriptionAndDate(String description, String date) {
+        log.info("Service - findActivityByDescriptionAndDate : {} {}", description, date);
+        return activityRepository.findByDescriptionAndDate(description, date);
+    }
+
+    public CommunityActivity findCommunityActivityByDescriptionAndDate(String description, String date) {
+        log.info("Service - findActivityByDescriptionAndDate : {} {}", description, date);
+        return communityActivityRepository.findByDescriptionAndDate(description, date);
+    }
 }

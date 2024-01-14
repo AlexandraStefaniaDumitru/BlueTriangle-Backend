@@ -6,12 +6,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -85,6 +87,17 @@ public class CommunityActivityController {
             CommunityActivity savedCommunityActivity = this.service.saveCommunityActivity(communityActivity);
             this.service.saveCommunityActivity(savedCommunityActivity);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/verify")
+    @Description("Verifies an activity")
+    public ResponseEntity<Activity> verifyActivity(@RequestBody Map<String, String> payload) {
+        log.info("CommunityActivityController - verifyActivity : {} {}", payload.get("description"), payload.get("date"));
+        CommunityActivity activity = service.findCommunityActivityByDescriptionAndDate(payload.get("description"), payload.get("date"));
+        activity.setVerified(true);
+        log.info(activity);
+        service.saveCommunityActivity(activity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
