@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -82,6 +83,17 @@ public class ActivityController {
                     .build();
             this.service.saveActivity(activity);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/verify")
+    @Description("Verifies an activity")
+    public ResponseEntity<Activity> verifyActivity(@RequestBody Map<String, String> payload) {
+        log.info("ActivityController - verifyActivity : {} {}", payload.get("description"), payload.get("date"));
+        Activity activity = service.findActivityByDescriptionAndDate(payload.get("description"), payload.get("date"));
+        activity.setVerified(true);
+        log.info(activity);
+        service.saveActivity(activity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

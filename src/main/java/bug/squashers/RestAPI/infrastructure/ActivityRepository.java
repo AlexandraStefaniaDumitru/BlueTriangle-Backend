@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface ActivityRepository extends MongoRepository<Activity, ObjectId> {
     List<Activity> findByChild_IdOrAdult_Id(ObjectId childId, ObjectId adultId);
-
+    Activity findByDescriptionAndDate(String description, String date);
 
 }
