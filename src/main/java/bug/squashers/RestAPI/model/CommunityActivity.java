@@ -9,28 +9,25 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-@Document(collection = "activities")
+import java.util.List;
+
+@Document(collection = "community-activities")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Activity {
+public class CommunityActivity {
     @Id
     private ObjectId id;
-
     @DocumentReference
-    private Child child;
-
+    private List<Child> children;
     @DocumentReference
-    private User adult;
-
+    private List<User> adults;
+    @DocumentReference
+    private User organizer;
     private String date;
-
     private String duration;
-
     private String description;
-
     private boolean isVerified;
-
     private boolean hasFeedback;
 }
