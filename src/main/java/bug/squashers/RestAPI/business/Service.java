@@ -70,6 +70,11 @@ public class Service {
 
     public CommunityActivity saveCommunityActivity(CommunityActivity communityActivity){
         log.info("Service - saveCommunityActivity : {}", communityActivity);
+        for(User user: communityActivity.getAdults()){
+            updateScore(user, 1);
+        }
+        User organizer = communityActivity.getOrganizer();
+        updateScore(organizer,1);
         return communityActivityRepository.save(communityActivity);
     }
 
@@ -81,7 +86,7 @@ public class Service {
     private User updateScore(User adult, int bonusScore) {
         int newScore = adult.getScore() + bonusScore;
         adult.setScore(newScore);
-        return userRepository.insert(adult);
+        return userRepository.save(adult);
     }
 
     public User createUser(String email, String username, String description, String password, String date, Role role) {
