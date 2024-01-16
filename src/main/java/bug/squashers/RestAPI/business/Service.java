@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.cache.annotation.Cacheable;
-import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -146,5 +146,17 @@ public class Service {
     public CommunityActivity findCommunityActivityByDescriptionAndDate(String description, String date) {
         log.info("Service - findActivityByDescriptionAndDate : {} {}", description, date);
         return communityActivityRepository.findByDescriptionAndDate(description, date);
+    }
+
+    public void feedbackActivity(Activity activity, int feedback) {
+        log.info("Service - feedbackActivity : {} {} {}", activity.getDate(), activity.getDescription(), feedback);
+        User user = activity.getAdult();
+        updateScore(user, feedback);
+    }
+
+    public void feedbackCommunityActivity(CommunityActivity activity, int feedback) {
+        log.info("Service - feedbackCommunityActivity : {} {} {}", activity.getDate(), activity.getDescription(), feedback);
+        User organizer = activity.getOrganizer();
+        updateScore(organizer, feedback);
     }
 }

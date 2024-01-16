@@ -96,4 +96,16 @@ public class ActivityController {
         service.saveActivity(activity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/feedback")
+    @Description("Updates score based on feedback for the activity's organizer")
+    public ResponseEntity<Activity> feedbackActivity(@RequestBody ActivityFeedbackDTO activityFeedback) {
+        log.info("ActivityController - feedback : {} {} {}", activityFeedback.getDate(), activityFeedback.getDescription(), activityFeedback.getFeedback());
+        Activity activity = service.findActivityByDescriptionAndDate(activityFeedback.getDescription(), activityFeedback.getDate());
+        activity.setHasFeedback(true);
+        log.info(activity);
+        service.saveActivity(activity);
+        service.feedbackActivity(activity, activityFeedback.getFeedback());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

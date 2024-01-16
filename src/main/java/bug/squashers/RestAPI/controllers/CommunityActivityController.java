@@ -100,4 +100,15 @@ public class CommunityActivityController {
         service.saveCommunityActivity(activity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PostMapping("/feedback")
+    @Description("Updates score based on feedback for the activity's organizer")
+    public ResponseEntity<Activity> feedbackActivity(@RequestBody ActivityFeedbackDTO activityFeedback) {
+        log.info("CommunityActivityController - feedback : {} {} {}", activityFeedback.getDate(), activityFeedback.getDescription(), activityFeedback.getFeedback());
+        CommunityActivity activity = service.findCommunityActivityByDescriptionAndDate(activityFeedback.getDescription(), activityFeedback.getDate());
+        activity.setHasFeedback(true);
+        log.info(activity);
+        service.saveCommunityActivity(activity);
+        service.feedbackCommunityActivity(activity, activityFeedback.getFeedback());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
