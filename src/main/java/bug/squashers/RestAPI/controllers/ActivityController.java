@@ -1,6 +1,7 @@
 package bug.squashers.RestAPI.controllers;
 
 import bug.squashers.RestAPI.business.Service;
+import bug.squashers.RestAPI.manager.EmailSenderManager;
 import bug.squashers.RestAPI.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +23,8 @@ public class ActivityController {
     private final static Logger log = LogManager.getLogger(ActivityController.class);
     @Autowired
     private Service service;
+    @Autowired
+    private EmailSenderManager emailSenderManager;
 
     @GetMapping
     @Description("Retrieves all the activities from DB")
@@ -92,6 +95,15 @@ public class ActivityController {
         log.info("ActivityController - verifyActivity : {} {}", payload.get("description"), payload.get("date"));
         Activity activity = service.findActivityByDescriptionAndDate(payload.get("description"), payload.get("date"));
         activity.setVerified(true);
+        if(activity.isVerified()){
+            String subject = "Congratulations!Your activity is approved!";
+            String body = """
+                One of our admins approved your activity.Let's go and put some smiles on children's faces!
+                Have fun!
+                Sincerely, Blue Triangle Team.""";
+            activity.getAdult().setEmail("lrngrigorescu@gmail.com");
+            emailSenderManager.sendEmail(activity.getAdult().getEmail(), subject, body);
+        }
         log.info(activity);
         service.saveActivity(activity);
         return new ResponseEntity<>(HttpStatus.OK);

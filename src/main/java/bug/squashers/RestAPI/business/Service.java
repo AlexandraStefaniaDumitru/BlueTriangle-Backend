@@ -4,7 +4,6 @@ import bug.squashers.RestAPI.infrastructure.ActivityRepository;
 import bug.squashers.RestAPI.infrastructure.ChildRepository;
 import bug.squashers.RestAPI.infrastructure.CommunityActivityRepository;
 import bug.squashers.RestAPI.infrastructure.UserRepository;
-import bug.squashers.RestAPI.manager.EmailSenderManager;
 import bug.squashers.RestAPI.model.*;
 import bug.squashers.RestAPI.utils.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -28,8 +27,6 @@ public class Service {
     private ChildRepository childRepository;
     @Autowired
     private CommunityActivityRepository communityActivityRepository;
-    @Autowired
-    private EmailSenderManager emailSenderManager;
 
     public List<User> findAllUsers() {
         System.out.println("findAllUsers");
