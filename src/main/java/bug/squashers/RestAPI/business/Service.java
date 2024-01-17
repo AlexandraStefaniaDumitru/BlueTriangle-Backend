@@ -152,4 +152,16 @@ public class Service {
         log.info("Service - findActivityByDescriptionAndDate : {} {}", description, date);
         return communityActivityRepository.findByDescriptionAndDate(description, date);
     }
+
+    public void feedbackActivity(Activity activity, int feedback) {
+        log.info("Service - feedbackActivity : {} {} {}", activity.getDate(), activity.getDescription(), feedback);
+        User user = activity.getAdult();
+        updateScore(user, feedback);
+    }
+
+    public void feedbackCommunityActivity(CommunityActivity activity, int feedback) {
+        log.info("Service - feedbackCommunityActivity : {} {} {}", activity.getDate(), activity.getDescription(), feedback);
+        User organizer = activity.getOrganizer();
+        updateScore(organizer, feedback);
+    }
 }
