@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,26 +57,26 @@ public class Service {
         return activityRepository.findAll();
     }
 
-    @Cacheable("community-activities")
+    //    @Cacheable("community-activities")
     public List<CommunityActivity> findAllCommunityActivities() {
         log.info("Service - findAllCommunityActivities");
         return communityActivityRepository.findAll();
     }
 
-    public Activity saveActivity(Activity activity){
-        log.info("Service - saveActivity : {}",activity);
+    public Activity saveActivity(Activity activity) {
+        log.info("Service - saveActivity : {}", activity);
         User adult = activity.getAdult();
         User updatedUser = updateScore(adult, 1);
-        return  activityRepository.save(activity);
+        return activityRepository.save(activity);
     }
 
     public CommunityActivity saveCommunityActivity(CommunityActivity communityActivity) {
         log.info("Service - saveCommunityActivity : {}", communityActivity);
-        for(User user: communityActivity.getAdults()){
+        for (User user : communityActivity.getAdults()) {
             updateScore(user, 1);
         }
         User organizer = communityActivity.getOrganizer();
-        updateScore(organizer,1);
+        updateScore(organizer, 1);
         return communityActivityRepository.save(communityActivity);
     }
 
@@ -91,9 +92,9 @@ public class Service {
     }
 
     public User createUser(String email, String username, String description, String password, String date, Role role) {
-        log.info("Service - createUser : {},{},{},{},{},{}",email,username,description,password,date, role);
+        log.info("Service - createUser : {},{},{},{},{},{}", email, username, description, password, date, role);
         String formattedDate = Utils.getFormattedDate(date);
-        return userRepository.insert(new User(email, username,password,description,formattedDate, role));
+        return userRepository.insert(new User(email, username, password, description, formattedDate, role));
     }
 
     @Cacheable("children")
@@ -160,5 +161,20 @@ public class Service {
         log.info("Service - feedbackCommunityActivity : {} {} {}", activity.getDate(), activity.getDescription(), feedback);
         User organizer = activity.getOrganizer();
         updateScore(organizer, feedback);
+    }
+
+    public User deleteUser(User user) {
+        userRepository.delete(user);
+        return user;
+    }
+
+    public Activity deleteActivity(Activity activity) {
+        activityRepository.delete(activity);
+        return activity;
+    }
+
+    public CommunityActivity deleteCommunityActivity(CommunityActivity communityActivity) {
+        communityActivityRepository.delete(communityActivity);
+        return communityActivity;
     }
 }
