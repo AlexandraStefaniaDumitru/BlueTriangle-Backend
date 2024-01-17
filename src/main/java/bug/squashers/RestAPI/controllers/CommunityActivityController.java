@@ -1,6 +1,7 @@
 package bug.squashers.RestAPI.controllers;
 
 import bug.squashers.RestAPI.business.Service;
+import bug.squashers.RestAPI.manager.EmailSenderManager;
 import bug.squashers.RestAPI.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +22,8 @@ public class CommunityActivityController {
     private final static Logger log = LogManager.getLogger(ActivityController.class);
     @Autowired
     private Service service;
+    @Autowired
+    private EmailSenderManager emailSenderManager;
 
     @GetMapping("/all-community-activities")
     public ResponseEntity<List<CommunityActivity>> getCommunityActivities() {
@@ -43,8 +46,8 @@ public class CommunityActivityController {
         User joinee = service.findUser(username).orElse(null);
         CommunityActivity communityActivity = new CommunityActivity();
         List<CommunityActivity> communityActivities = service.findCommunityActivityByOrganizer(organizer);
-        for(CommunityActivity ca : communityActivities){
-            if(ca.getDate().equals(date)){
+        for (CommunityActivity ca : communityActivities) {
+            if (ca.getDate().equals(date)) {
                 List<User> adults = ca.getAdults();
                 adults.add(joinee);
                 ca.setAdults(adults);
@@ -67,12 +70,12 @@ public class CommunityActivityController {
         }
         List<String> adultsList = dto.getAdults();
         List<User> adults = new ArrayList<>();
-        for(String adultName: adultsList){
+        for (String adultName : adultsList) {
             User adult = service.findUser(adultName).orElse(null);
             adults.add(adult);
         }
         List<String> dates = List.of(dto.getDate().split(", "));
-        for (String date: dates) {
+        for (String date : dates) {
             CommunityActivity communityActivity = CommunityActivity.builder()
                     .children(childList)
                     .adults(adults)
@@ -99,6 +102,7 @@ public class CommunityActivityController {
         service.saveCommunityActivity(activity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @PostMapping("/feedback")
     @Description("Updates score based on feedback for the activity's organizer")
     public ResponseEntity<Activity> feedbackActivity(@RequestBody ActivityFeedbackDTO activityFeedback) {
@@ -108,6 +112,32 @@ public class CommunityActivityController {
         log.info(activity);
         service.saveCommunityActivity(activity);
         service.feedbackCommunityActivity(activity, activityFeedback.getFeedback());
+        User organizer = activity.getOrganizer();
+        int oldScore = organizer.getScore();
+        int newScore = activityFeedback.getFeedback();
+        if (newScore < 0) {
+            organizer.setEmail("lrngrigorescu@gmail.com");
+            String to = organizer.getEmail();
+            String subject = "We're sorry!";
+            int finalScore = newScore + oldScore;
+            String body = "After a discussion with our children, the feedback was not a very good one.\n"
+                    + "Don't worry!This is beneficial not only for us but also for you.\n" +
+                    "Don't stop finding the best version of you!\n" +
+                    "The score obtained at this activity is " + newScore + " and you current score is " + finalScore
+                    + "\n" +
+                    "Sincerely, Blue Triangle Team!";
+            emailSenderManager.sendEmail(to, subject, body);
+        } else {
+            organizer.setEmail("lrngrigorescu@gmail.com");
+            String to = organizer.getEmail();
+            String subject = "We have good news for you!";
+            int finalScore = newScore + oldScore;
+            String body = "After a discussion with our children, the feedback was a really good one.\n"
+                    + "Keep up doing great job! Continue to find the best version of you anywhere.\n"
+                    + "The score obtained at this activity is " + newScore + " and you current score is " + finalScore
+                    + "\n" + "Sincerely, Blue Triangle Team!";
+            emailSenderManager.sendEmail(to, subject, body);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

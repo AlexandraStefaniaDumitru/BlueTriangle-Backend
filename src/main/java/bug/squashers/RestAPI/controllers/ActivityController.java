@@ -95,12 +95,12 @@ public class ActivityController {
         log.info("ActivityController - verifyActivity : {} {}", payload.get("description"), payload.get("date"));
         Activity activity = service.findActivityByDescriptionAndDate(payload.get("description"), payload.get("date"));
         activity.setVerified(true);
-        if(activity.isVerified()){
+        if (activity.isVerified()) {
             String subject = "Congratulations!Your activity is approved!";
             String body = """
-                One of our admins approved your activity.Let's go and put some smiles on children's faces!
-                Have fun!
-                Sincerely, Blue Triangle Team.""";
+                    One of our admins approved your activity.Let's go and put some smiles on children's faces!
+                    Have fun!
+                    Sincerely, Blue Triangle Team.""";
             activity.getAdult().setEmail("lrngrigorescu@gmail.com");
             emailSenderManager.sendEmail(activity.getAdult().getEmail(), subject, body);
         }
@@ -118,6 +118,32 @@ public class ActivityController {
         log.info(activity);
         service.saveActivity(activity);
         service.feedbackActivity(activity, activityFeedback.getFeedback());
+        User organizer = activity.getAdult();
+        int oldScore = organizer.getScore();
+        int newScore = activityFeedback.getFeedback();
+        if (newScore < 0) {
+            organizer.setEmail("lrngrigorescu@gmail.com");
+            String to = organizer.getEmail();
+            String subject = "We're sorry!";
+            int finalScore = newScore + oldScore;
+            String body = "After a discussion with our children, the feedback was not a very good one.\n"
+                    + "Don't worry!This is beneficial not only for us but also for you.\n" +
+                    "Don't stop finding the best version of you!\n" +
+                    "The score obtained at this activity is " + newScore + " and you current score is " + finalScore
+                    + "\n" +
+                    "Sincerely, Blue Triangle Team!";
+            emailSenderManager.sendEmail(to, subject, body);
+        } else {
+            organizer.setEmail("lrngrigorescu@gmail.com");
+            String to = organizer.getEmail();
+            String subject = "We have good news for you!";
+            int finalScore = newScore + oldScore;
+            String body = "After a discussion with our children, the feedback was a really good one.\n"
+                    + "Keep up doing great job! Continue to find the best version of you anywhere.\n"
+                    + "The score obtained at this activity is " + newScore + " and you current score is " + finalScore
+                    + "\n" + "Sincerely, Blue Triangle Team!";
+            emailSenderManager.sendEmail(to, subject, body);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
