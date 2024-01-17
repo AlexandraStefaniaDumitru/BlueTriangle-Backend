@@ -108,42 +108,51 @@ public class ActivityController {
         service.saveActivity(activity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @PostMapping("/feedback")
-    @Description("Updates score based on feedback for the activity's organizer")
-    public ResponseEntity<Activity> feedbackActivity(@RequestBody ActivityFeedbackDTO activityFeedback) {
-        log.info("ActivityController - feedback : {} {} {}", activityFeedback.getDate(), activityFeedback.getDescription(), activityFeedback.getFeedback());
-        Activity activity = service.findActivityByDescriptionAndDate(activityFeedback.getDescription(), activityFeedback.getDate());
-        activity.setHasFeedback(true);
-        log.info(activity);
-        service.saveActivity(activity);
-        service.feedbackActivity(activity, activityFeedback.getFeedback());
-        User organizer = activity.getAdult();
-        int oldScore = organizer.getScore();
-        int newScore = activityFeedback.getFeedback();
-        if (newScore < 0) {
-            organizer.setEmail("lrngrigorescu@gmail.com");
-            String to = organizer.getEmail();
-            String subject = "We're sorry!";
-            int finalScore = newScore + oldScore;
-            String body = "After a discussion with our children, the feedback was not a very good one.\n"
-                    + "Don't worry!This is beneficial not only for us but also for you.\n" +
-                    "Don't stop finding the best version of you!\n" +
-                    "The score obtained at this activity is " + newScore + " and you current score is " + finalScore
-                    + "\n" +
-                    "Sincerely, Blue Triangle Team!";
-            emailSenderManager.sendEmail(to, subject, body);
-        } else {
-            organizer.setEmail("lrngrigorescu@gmail.com");
-            String to = organizer.getEmail();
-            String subject = "We have good news for you!";
-            int finalScore = newScore + oldScore;
-            String body = "After a discussion with our children, the feedback was a really good one.\n"
-                    + "Keep up doing great job! Continue to find the best version of you anywhere.\n"
-                    + "The score obtained at this activity is " + newScore + " and you current score is " + finalScore
-                    + "\n" + "Sincerely, Blue Triangle Team!";
-            emailSenderManager.sendEmail(to, subject, body);
+        @PostMapping("/verify-false")
+        @Description("Verifies an activity")
+        public ResponseEntity<Activity> verifyActivityFalse (@RequestBody Map < String, String > payload){
+            log.info("ActivityController - verifyActivity : {} {}", payload.get("description"), payload.get("date"));
+            Activity activity = service.findActivityByDescriptionAndDate(payload.get("description"), payload.get("date"));
+            log.info(activity);
+            service.deleteActivity(activity);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        @PostMapping("/feedback")
+        @Description("Updates score based on feedback for the activity's organizer")
+        public ResponseEntity<Activity> feedbackActivity (@RequestBody ActivityFeedbackDTO activityFeedback){
+            log.info("ActivityController - feedback : {} {} {}", activityFeedback.getDate(), activityFeedback.getDescription(), activityFeedback.getFeedback());
+            Activity activity = service.findActivityByDescriptionAndDate(activityFeedback.getDescription(), activityFeedback.getDate());
+            activity.setHasFeedback(true);
+            log.info(activity);
+            service.saveActivity(activity);
+            service.feedbackActivity(activity, activityFeedback.getFeedback());
+            User organizer = activity.getAdult();
+            int oldScore = organizer.getScore();
+            int newScore = activityFeedback.getFeedback();
+            if (newScore < 0) {
+                organizer.setEmail("lrngrigorescu@gmail.com");
+                String to = organizer.getEmail();
+                String subject = "We're sorry!";
+                int finalScore = newScore + oldScore;
+                String body = "After a discussion with our children, the feedback was not a very good one.\n"
+                        + "Don't worry!This is beneficial not only for us but also for you.\n" +
+                        "Don't stop finding the best version of you!\n" +
+                        "The score obtained at this activity is " + newScore + " and you current score is " + finalScore
+                        + "\n" +
+                        "Sincerely, Blue Triangle Team!";
+                emailSenderManager.sendEmail(to, subject, body);
+            } else {
+                organizer.setEmail("lrngrigorescu@gmail.com");
+                String to = organizer.getEmail();
+                String subject = "We have good news for you!";
+                int finalScore = newScore + oldScore;
+                String body = "After a discussion with our children, the feedback was a really good one.\n"
+                        + "Keep up doing great job! Continue to find the best version of you anywhere.\n"
+                        + "The score obtained at this activity is " + newScore + " and you current score is " + finalScore
+                        + "\n" + "Sincerely, Blue Triangle Team!";
+                emailSenderManager.sendEmail(to, subject, body);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
-}

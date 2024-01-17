@@ -73,4 +73,16 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/verify-false")
+    @Description("Verifies an user")
+    public ResponseEntity<User> verifyUserFalse(@RequestBody Map<String, String> payload) {
+        log.info("UserController - verifyUser : {}", payload);
+        User userOptional = service.findUserByUsername(payload.get("username"));
+        if (userOptional != null) {
+            service.deleteUser(userOptional);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

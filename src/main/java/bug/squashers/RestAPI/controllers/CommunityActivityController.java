@@ -103,6 +103,16 @@ public class CommunityActivityController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/verify-false")
+    @Description("Verifies an activity")
+    public ResponseEntity<Activity> verifyActivityFalse(@RequestBody Map<String, String> payload) {
+        log.info("CommunityActivityController - verifyActivity : {} {}", payload.get("description"), payload.get("date"));
+        CommunityActivity activity = service.findCommunityActivityByDescriptionAndDate(payload.get("description"), payload.get("date"));
+        log.info(activity);
+        service.deleteCommunityActivity(activity);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PostMapping("/feedback")
     @Description("Updates score based on feedback for the activity's organizer")
     public ResponseEntity<Activity> feedbackActivity(@RequestBody ActivityFeedbackDTO activityFeedback) {
