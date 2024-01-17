@@ -26,7 +26,6 @@ public class User {
     @DocumentReference
     private List<Child> knownChildren;
 
-    @DocumentReference
     private Role role;
 
     private boolean verified;
