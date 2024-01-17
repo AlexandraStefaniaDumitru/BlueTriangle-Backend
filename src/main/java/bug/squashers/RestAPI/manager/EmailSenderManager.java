@@ -10,10 +10,6 @@ public class EmailSenderManager {
     @Autowired
     private JavaMailSender javaMailSender;
     public void sendEmail(String to, String subject, String body) {
-        //just for test purposes
-        subject = "Salut, sunt eu, Lorena";
-        to = "lrngrigorescu@gmail.com";
-        body = "heeeeeeeey";
         SimpleMailMessage messager = new SimpleMailMessage();
         messager.setFrom("blue.triangle0605@gmail.com");
         messager.setSubject(subject);
