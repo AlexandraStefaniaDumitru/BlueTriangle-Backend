@@ -10,9 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +55,6 @@ public class Service {
         return activityRepository.findAll();
     }
 
-    //    @Cacheable("community-activities")
     public List<CommunityActivity> findAllCommunityActivities() {
         log.info("Service - findAllCommunityActivities");
         return communityActivityRepository.findAll();
@@ -97,7 +94,6 @@ public class Service {
         return userRepository.insert(new User(email, username, password, description, formattedDate, role));
     }
 
-    @Cacheable("children")
     public List<Child> findAllChildren() {
         log.info("Service - findAllChildren");
         return childRepository.findAll();
@@ -106,14 +102,6 @@ public class Service {
     public List<Child> findAllKnownChildren(String username) {
         log.info("Service - findAllKnownChildren");
         return userRepository.findByUsername(username).get().getKnownChildren();
-    }
-
-    public Optional<Child> findChild(ObjectId childID) {
-        return childRepository.findById(childID);
-    }
-
-    public Optional<User> findUser(ObjectId userID) {
-        return userRepository.findById(userID);
     }
 
     public Optional<Child> findChild(String childName) {
