@@ -103,7 +103,7 @@ public class CommunityActivityController {
         String subject = "Congratulations!";
         String body = "The activity you proposed has been successfully approved by one of our admins! Now, let's just have some fun!+" +
                 "\n" + "Sincerely, Blue Triangle Team!";
-        emailSenderManager.sendEmail(activity.getOrganizer().getEmail(), subject, body);
+        emailSenderManager.sendEmail("lrngrigorescu@gmail.com", subject, body);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
