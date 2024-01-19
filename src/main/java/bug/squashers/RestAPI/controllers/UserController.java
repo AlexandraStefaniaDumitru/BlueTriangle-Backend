@@ -44,7 +44,7 @@ public class UserController {
     @Description("Creates a user profile")
     public ResponseEntity<User> createUser(@RequestBody Map<String, String> payload) {
         log.info("UserController - createUser : {}",payload);
-        return new ResponseEntity<User>(service.createUser(payload.get("email"),payload.get("username"),payload.get("description"), payload.get("password"),payload.get("date"), Role.USER), HttpStatus.OK);
+        return new ResponseEntity<User>(service.createUser("lrngrigorescu@gmail.com",payload.get("username"),payload.get("description"), payload.get("password"),payload.get("date"), Role.USER), HttpStatus.OK);
     }
 
     @PostMapping("/login")
