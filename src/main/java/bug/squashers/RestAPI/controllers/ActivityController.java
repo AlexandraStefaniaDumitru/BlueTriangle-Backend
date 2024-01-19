@@ -115,6 +115,9 @@ public class ActivityController {
             Activity activity = service.findActivityByDescriptionAndDate(payload.get("description"), payload.get("date"));
             log.info(activity);
             service.deleteActivity(activity);
+            String subject = "We're sorry!";
+            String body = "The activity you proposed has not been approved.Try again, don't loose your hope!";
+            emailSenderManager.sendEmail(activity.getAdult().getEmail(), subject, body);
             return new ResponseEntity<>(HttpStatus.OK);
         }
 

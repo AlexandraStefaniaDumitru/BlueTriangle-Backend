@@ -100,6 +100,9 @@ public class CommunityActivityController {
         activity.setVerified(true);
         log.info(activity);
         service.saveCommunityActivity(activity);
+        String subject = "Congratulations!";
+        String body = "The activity you proposed has been successfully approved by one of our admins!Now, let's just have some fun!";
+        emailSenderManager.sendEmail(activity.getOrganizer().getEmail(), subject, body);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -110,6 +113,9 @@ public class CommunityActivityController {
         CommunityActivity activity = service.findCommunityActivityByDescriptionAndDate(payload.get("description"), payload.get("date"));
         log.info(activity);
         service.deleteCommunityActivity(activity);
+        String subject = "We're sorry!";
+        String body = "The activity you proposed has not been approved.Try again, don't loose your hope!";
+        emailSenderManager.sendEmail(activity.getOrganizer().getEmail(), subject, body);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
