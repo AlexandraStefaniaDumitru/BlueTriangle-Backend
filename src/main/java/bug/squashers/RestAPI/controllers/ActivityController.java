@@ -136,9 +136,9 @@ public class ActivityController {
                 String subject = "We're sorry!";
                 int finalScore = newScore + oldScore;
                 String body = "After a discussion with our children, the feedback was not a very good one.\n"
-                        + "Don't worry!This is beneficial not only for us but also for you.\n" +
+                        + "Don't worry! This is beneficial not only for us but also for you.\n" +
                         "Don't stop finding the best version of you!\n" +
-                        "The score obtained at this activity is " + newScore + " and you current score is " + finalScore
+                        "The score obtained at this activity is " + newScore + " and your current score is " + finalScore
                         + "\n" +
                         "Sincerely, Blue Triangle Team!";
                 emailSenderManager.sendEmail(to, subject, body);
@@ -149,7 +149,7 @@ public class ActivityController {
                 int finalScore = newScore + oldScore;
                 String body = "After a discussion with our children, the feedback was a really good one.\n"
                         + "Keep up doing great job! Continue to find the best version of you anywhere.\n"
-                        + "The score obtained at this activity is " + newScore + " and you current score is " + finalScore
+                        + "The score obtained at this activity is " + newScore + " and your current score is " + finalScore
                         + "\n" + "Sincerely, Blue Triangle Team!";
                 emailSenderManager.sendEmail(to, subject, body);
             }
